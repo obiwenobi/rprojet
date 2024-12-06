@@ -1,6 +1,8 @@
 ---
 title: "testproj"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2024-12-06"
 ---
 
@@ -31,4 +33,11 @@ Je fais un graphique en barre
 hist(iris$Sepal.Length)
 ```
 Et maintenant je vais manger des croques pour caler le café.
+
+Je me demande s'il existe un lien entre deux variables
+```{r}
+plot(iris)
+```
+
+
 
