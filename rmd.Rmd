@@ -28,18 +28,26 @@ You can also embed plots, for example:
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
-JE voulais ajouter que je mange du pain.
-Je fais un graphique en barre
+
+JE voulais ajouter que je mange du pain. Je fais un graphique en barre
+
 ```{r}
 hist(iris$Sepal.Length)
 ```
+
 Et maintenant je vais manger des croques pour caler le café.
 
 Je me demande s'il existe un lien entre deux variables
+
 ```{r}
 plot(iris)
 ```
+
 test
 
+Une simple régression linéaire nous dirait rapidement de quoi il s'agit.
 
+```{r,echo =TRUE}
 
+lm(iris$Sepal.Length~iris$Petal.Length) %>% summary
+```
