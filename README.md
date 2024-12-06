@@ -1,3 +1,2 @@
-This website page is:
+This repository website is available [here](https://obiwenobi.github.io/rprojet/#introduction).
 
-https://obiwenobi.github.io/rprojet/#introduction
