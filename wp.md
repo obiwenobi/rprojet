@@ -1,3 +1,8 @@
+Mauritius time series
+================
+Obiwenobi
+2024-12-06
+
 # Introduction
 
 This document aims to define whether macroeconomics variables in
@@ -11,15 +16,15 @@ The dataset **dbase** includes the following variables:
     ##  [1] "year"         "birth"        "death"        "infmortality" "stillbirth"  
     ##  [6] "marriage"     "divorce"      "gdp"          "g"            "inf"
 
--   **birth**: The number of live births in a year per 1,000 mid-year
-    population.
--   **death**: The number of deaths in a year per 1,000 mid-year
-    population.
--   **infmortality**: The number of infant deaths in a year per 1,000
-    live births during the year.
--   **g**: Annual growth rate
--   **inf**: Annual inflation rate,Percent, Not Seasonally Adjusted
--   **gdp**: Gross domestic product, billions of US $
+- **birth**: The number of live births in a year per 1,000 mid-year
+  population.
+- **death**: The number of deaths in a year per 1,000 mid-year
+  population.
+- **infmortality**: The number of infant deaths in a year per 1,000 live
+  births during the year.
+- **g**: Annual growth rate
+- **inf**: Annual inflation rate,Percent, Not Seasonally Adjusted
+- **gdp**: Gross domestic product, billions of US \$
 
 <!-- Compléter les autres  variables -->
 
@@ -67,7 +72,7 @@ dbase %>%
                                 "infmortality"="green"))
 ```
 
-![](wp_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![](wp_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 We can see that every rate is decreasing and might probably be
 correlated. Evaluating this effect through regression would probably be
