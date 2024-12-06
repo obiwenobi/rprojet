@@ -30,5 +30,5 @@ Je fais un graphique en barre
 ```{r}
 hist(iris$Sepal.Length)
 ```
-
+Et maintenant je vais manger des croques pour caler le café.
 
