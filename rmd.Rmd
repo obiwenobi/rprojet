@@ -43,11 +43,19 @@ Je me demande s'il existe un lien entre deux variables
 plot(iris)
 ```
 
-test
+## Linear Regression
 
 Une simple régression linéaire nous dirait rapidement de quoi il s'agit.
 
 ```{r,echo =TRUE}
 
 lm(iris$Sepal.Length~iris$Petal.Length) %>% summary
+```
+
+## Augmenting the model
+
+Pour étudier la question, il pourrait être utile d'ajouter des variables dans le modèle.
+
+```{r}
+lm(iris$Sepal.Length~iris$Sepal.Width + iris$Petal.Length) %>% summary
 ```
