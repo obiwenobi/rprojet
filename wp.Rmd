@@ -1,0 +1,75 @@
+---
+title: "Mauritius time series"
+author: "Obiwenobi"
+date: "2024-12-06"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library('tidyverse')
+library("ggplot2")
+library(lubridate)
+library(tidyr)
+library(readxl)
+library(vars) 
+library(panelvar)
+library(dplyr)
+dbase <- read_csv("setMU.csv")
+dbase <- dbase[,-1]
+
+```
+
+# Introduction
+
+This document aims to define whether macroeconomics variables in Mauritius are endogenous. The dataset used to produce these figures and tables is merge from various sources. It gathers data from 1964 to 2018.
+
+# Data summary
+
+The dataset **dbase** includes the following variables:
+
+```{r dbase,echo=FALSE}
+colnames(dbase)
+
+```
+
+-   **birth**: The number of live births in a year per 1,000 mid-year population.
+-   **death**: The number of deaths in a year per 1,000 mid-year population.
+-   **infmortality**: The number of infant deaths in a year per 1,000 live births during the year.
+-   **g**: Annual growth rate
+-   **inf**: Annual inflation rate,Percent, Not Seasonally Adjusted
+-   **gdp**: Gross domestic product, billions of US \$
+
+<!-- Compléter les autres  variables -->
+
+Let's look at the descriptive statistics of our variables.
+
+```{r }
+summary(dbase)
+
+```
+
+How did the variables evolve during the years ? First, the health data.
+
+```{r}
+dbase %>% 
+  ggplot() + 
+  geom_line(aes(y = stillbirth, x = year, color = "Stillbirth")) + 
+  geom_line(aes(y = death, x = year, color = "death")) + 
+  geom_line(aes(y = infmortality, x = year, color = "infmortality")) +
+  geom_line(aes(y = birth, x = year, color = "Birth")) +
+  xlab('Year') +
+  ylab('') +
+  labs(title = "Health variables over Time - Mauritius", color = "Legend") +
+  scale_color_manual(values = c("Stillbirth" = "red", "Birth" = "blue","death"="black",
+                                "infmortality"="green"))
+```
+
+We can see that every rate is decreasing and might probably be correlated. Evaluating this effect through regression would probably be misleading as all those variable are likely to be endogenous. Methods such as Vector Auto-Regressive models suits well to identify such relationships but requires high frequency data such as quarterly data. The data set only provides yearly data which does not ensure the estimations to be converging.
+
+Before we investigate this, let's consider macroeconomic data.
