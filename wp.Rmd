@@ -3,6 +3,8 @@ title: "Mauritius time series"
 author: "Obiwenobi"
 date: "2024-12-06"
 output:
+  md_document:
+    variant: markdown_github
   pdf_document: default
   html_document:
     toc: true
