@@ -47,20 +47,17 @@ colnames(dbase)
 -   **marriage**: The number of persons married in a year per 1,000 mid-year population.
 -   **divorce**: The number of persons divorced in a year per 1,000 mid-year population.
 
-
 How many observations do we have ? The function **nrow()** returns the number of rows and which is in the number of observations in our situation.
+
 ```{r}
 nrow(dbase)
 ```
-
-
 
 Let's look at the descriptive statistics of our variables.
 
 ```{r }
 summary(dbase)
 ```
-
 
 How did the variables evolve during the years ? First, the health data.
 
@@ -113,4 +110,12 @@ ggplot() +
 
 Recall that these variables are measured on the same scale. Interpreting these values does not require the same caution as for the previous plot. At first glance, there does not seem to be any linear correlation between both variables.
 
-In the previous figure, we did plot inflation which feature a sharp increase around **1980**. At the same period, there is inverse trend to inflation in marriage. Can we infer wether there is a relationship between
+In the previous figure, we did plot inflation which feature a sharp increase around **1980**. At the same period, there is inverse trend to inflation in marriage. Can we infer whether there is a relationship between marriage and divorce ? As discussed previously, the low frequency of data might hamper inference, especially if we seek to investigate long term effect.[^1]
+
+[^1]: Indeed, if many lags are used, a substantial share of data is to be put aside. For instance, considering 8 lags implies that the first eight observations are not considered in regressions, which almost amounts to 15% of the observations.&&
+
+Finally, before embarking in the inference journey, let's take a look to the distributions of our variables.
+
+```{r,echo=FALSE}
+boxplot(dbase[,2:10])
+```
