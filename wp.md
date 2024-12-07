@@ -25,8 +25,20 @@ The dataset **dbase** includes the following variables:
 - **g**: Annual growth rate
 - **inf**: Annual inflation rate,Percent, Not Seasonally Adjusted
 - **gdp**: Gross domestic product, billions of US \$
+- **marriage**: The number of persons married in a year per 1,000
+  mid-year population.
+- **divorce**: The number of persons divorced in a year per 1,000
+  mid-year population.
 
-<!-- Compléter les autres  variables -->
+How many observations do we have ? The function **nrow()** returns the
+number of rows and which is in the number of observations in our
+situation.
+
+``` r
+nrow(dbase)
+```
+
+    ## [1] 55
 
 Let’s look at the descriptive statistics of our variables.
 
@@ -72,14 +84,62 @@ dbase %>%
                                 "infmortality"="green"))
 ```
 
-![](wp_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](wp_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 We can see that every rate is decreasing and might probably be
 correlated. Evaluating this effect through regression would probably be
 misleading as all those variable are likely to be endogenous. Methods
-such as Vector Auto-Regressive models suits well to identify such
-relationships but requires high frequency data such as quarterly data.
-The data set only provides yearly data which does not ensure the
-estimations to be converging.
+such as Vector Auto-Regressive models suit well to identify such
+relationships but require high frequency data such as monthly data. The
+data set only provides yearly data which does not ensure the estimations
+to be converging.
 
 Before we investigate this, let’s consider macroeconomic data.
+
+``` r
+dbase%>%
+ggplot() + 
+  geom_line(aes(y =gdp , x = year, color = "Gross domestic product")) + 
+  geom_line(aes(y =inf , x = year, color = "Inflation")) + 
+  geom_line(aes(y =g , x = year, color = "Growth rate"))+
+  xlab('Year') +
+  ylab('') +
+  labs(title = "Macroeconomic variables over Time - Mauritius", color = "Legend") +
+  scale_color_manual(values = c("Gross domestic product" = "red", 
+                                "Inflation" = "blue","Growth rate"="black"))
+```
+
+![](wp_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+Plotting inflation, growth rate and gross domestic product such as the
+figure above might be misleading. Because the different values have
+different scales, it is misleading to plot these three time series
+together. Because of larger values, slight changes in smaller values are
+unobtrusive. Scatter plot, though they have another purpose, is more
+suitable to investigate such data relationship.
+
+Finally, let’s consider marriage and divorce values.
+
+``` r
+dbase%>%
+ggplot() + 
+  geom_line(aes(y =marriage , x = year, color = "Marriage")) + 
+  geom_line(aes(y =divorce , x = year, color = "Divorce")) + 
+  xlab('Year') +
+  ylab('') +
+  labs(title = "Marital variables over Time - Mauritius", color = "Legend") +
+  scale_color_manual(values = c("Marriage" = "red", 
+                                "Divorce" = "blue"))
+```
+
+![](wp_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+Recall that these variables are measured on the same scale. Interpreting
+these values does not require the same caution as for the previous plot.
+At first glance, there does not seem to be any linear correlation
+between both variables.
+
+In the previous figure, we did plot inflation which feature a sharp
+increase around **1980**. At the same period, there is inverse trend to
+inflation in marriage. Can we infer wether there is a relationship
+between
