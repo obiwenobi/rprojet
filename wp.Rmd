@@ -1,9 +1,10 @@
 ---
 output:
+  pdf_document: 
+    number_sections: true
   html_document:
     toc: true
     number_sections: true
-  pdf_document: default
   output: rmarkdown::github_document
 author: "Obiwenobi"
 date: "2024-12-06"
@@ -112,10 +113,78 @@ Recall that these variables are measured on the same scale. Interpreting these v
 
 In the previous figure, we did plot inflation which feature a sharp increase around **1980**. At the same period, there is inverse trend to inflation in marriage. Can we infer whether there is a relationship between marriage and divorce ? As discussed previously, the low frequency of data might hamper inference, especially if we seek to investigate long term effect.[^1]
 
-[^1]: Indeed, if many lags are used, a substantial share of data is to be put aside. For instance, considering 8 lags implies that the first eight observations are not considered in regressions, which almost amounts to 15% of the observations.&&
+[^1]: Indeed, if many lags are used, a substantial share of data is to be put aside. For instance, considering 8 lags implies that the first eight observations are not considered in regressions, which almost amounts to 15% of the observations.
 
 Finally, before embarking in the inference journey, let's take a look to the distributions of our variables.
 
 ```{r,echo=FALSE}
 boxplot(dbase[,2:10])
 ```
+
+Note that due to different scales, interpreting this boxplot is not straightforward. How about standardizing data before plotting ?
+
+```{r,out.width="70%"}
+ndata <- dbase%>%
+  mutate(across(2:10,scale))  %>%
+  pivot_longer(cols=2:10,names_to="Variable",values_to="Rate")%>%
+  ggplot()+geom_boxplot(aes(x=Variable,y=Rate))
+ndata
+```
+
+We see that growth features severe outliers. Without surprise, we see that there are some outliers as well for inflation and GDP. As our sample is small, it wouldn't be surprising that these outliers hampers our inference of the relationship between these three variables.
+
+Nonetheless, we see that other variables distribution do not present outliers, which might produce faster converging estimation.
+
+# Modelling relationships
+
+In this part we will seek to model the relationship between our variables before estimating whether their relationships are statistically significant. We will consider two different approach.
+
+
+1. **Linear Additive model**: We consider that there is a linear additive relationship between the variables. For instance, we could consider that we have a set of variables that could explain death rates. We can include time  *Fixed-Effects* to assess the effect of time. One might suggest the following model:
+
+$$
+death_{t} = \alpha_{t} + divorce_{t} + gdp_{t} + inf_{t}+g_{t}+birt_{t} + \varepsilon_{t}
+$$
+
+Modelling the relationship as such relies on the assumption that there is no endogeneity between our variables. There exist tests to verify this assumption.
+
+
+
+
+
+2.  **Vector Auto Regressive models (VAR)**: This method aims to define the endogenous relationship between variables considering that their present and lag value have an impact on future values.
+
+
+
+Let define our macroeconomic as a the following vector:
+
+$$
+{\textbf Y_{t}} = \begin{bmatrix}
+    birth_{t} \\
+    death_{t}\\
+    infmortality_{t} \\
+    \vdots \\
+   inf_{t}
+\end{bmatrix}
+$$
+
+We might consider that this vector is dependent on its past values. Therefore we may write our model such as:
+
+$$ 
+{\textbf Y_{t}} = {\textbf A_{1}}{\textbf Y_{t-1}} +
+{\textbf A_{2}}{\textbf Y_{t-2}}+
+{\textbf A_{3}}{\textbf Y_{t-3}}+...
++
+{\textbf A_{p}}{\textbf Y_{t-p}}+
+ \eta_{t}
+$$
+
+Where  is the disturbance vector.
+Then, from this model we can model a shock on one of our variables and estimate the shock effect on future values of the other variables. This is the **Impulse Response** which can be plotted and named as the **VAR Impulse Response Function** (**VAR IRF**)
+
+
+
+
+
+
+
