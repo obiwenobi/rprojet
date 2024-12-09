@@ -6,8 +6,9 @@ The first part of the analysis presents a summary of the dataset, including desc
 
 The second part of the analysis focuses on modeling relationships between the variables. Two approaches are considered:
 
-    Linear Additive Model: Marriage is modeled as a function of other macroeconomic variables, assuming no endogeneity. The results suggest that the growth rate has no significant effect on marriage, while mortality has a significant effect.
-    Vector Auto-Regressive (VAR) Model: This method models the relationships between multiple variables and includes their lagged values to account for endogenous relationships. The VAR model estimates the impact of past values of economic variables on current marriage rates. The results show that past mortality and growth rates affect marriage, but the effects of inflation, divorce, and other variables appear over time.
+1. Linear Additive Model: Marriage is modeled as a function of other macroeconomic variables, assuming no endogeneity. The results suggest that the growth rate has no significant effect on marriage, while mortality has a significant effect.
+
+2. Vector Auto-Regressive (VAR) Model: This method models the relationships between multiple variables and includes their lagged values to account for endogenous relationships. The VAR model estimates the impact of past values of economic variables on current marriage rates. The results show that past mortality and growth rates affect marriage, but the effects of inflation, divorce, and other variables appear over time.
 
 The final part examines the Impulse Response Function (IRF), which simulates the effect of a shock in one variable (e.g., GDP or growth) on marriage. The IRF results suggest that growth and GDP shocks do not significantly affect marriage rates in the long term.
 
