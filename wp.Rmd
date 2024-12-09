@@ -180,6 +180,8 @@ $$
 
 Where $\eta_{t}$ is the disturbance vector. Then, from this model we can model a shock on one of our variables and estimate the shock effect on future values of the other variables. This is the **Impulse Response** which can be plotted and referred to as the **VAR Impulse Response Function** (**VAR IRF**)
 
+# Estimation
+
 ## Linear contemporaneous additive model
 
 Let's model marriage as dependent of other macroeconomic variables as:
@@ -198,7 +200,7 @@ lm(marriage ~ g + gdp + inf +
 ```
 Our results suggest that growth rate does not impact marriage contemporaneously, while mortality rate effect is significant. This model features a high ```Multiple R-squared=0.7486``` which can be interpreted as the predictive accuracy. One could aggregate new data to test the efficiency of this model. Finally, other variables do not seem to affect significantly marriages in Mauritius on the period 1964-2018.
 
-##Vector Auto Regressive model
+## Vector Auto Regressive model
 
 Now, we will explore the effect of a macroeconomic shock on marriage over time. Recall that our model is :
 $$ 
@@ -209,6 +211,7 @@ $$
 {\textbf A_{p}}{\textbf Y_{t-p}}+
  \eta_{t}
 $$
+
 
 ### Baseline regression
 
