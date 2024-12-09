@@ -1,9 +1,9 @@
 ---
 output:
-  pdf_document: 
-    number_sections: true
   html_document:
     toc: true
+    number_sections: true
+  pdf_document: 
     number_sections: true
   output: rmarkdown::github_document
 author: "Obiwenobi"
@@ -93,7 +93,7 @@ ggplot() +
                                 "Inflation" = "blue","Growth rate"="black"))
 ```
 
-Plotting inflation, growth rate and gross domestic product such as the figure above might be misleading. Because the different values have different scales, it is misleading to plot these three time series together. Because of larger values, slight changes in smaller values are unobtrusive. Scatter plot, though they have another purpose, is more suitable to investigate such data relationship.
+Plotting together inflation, growth rate and gross domestic product such as the figure above might be misleading because these variables have different scales. Because of larger values, slight changes in smaller values are unobtrusive. Scatter plot, though they have another purpose, is more suitable to investigate data.
 
 Finally, let's consider marriage and divorce values.
 
@@ -131,7 +131,7 @@ ndata <- dbase%>%
 ndata
 ```
 
-We see that growth features severe outliers. Without surprise, we see that there are some outliers as well for inflation and GDP. As our sample is small, it wouldn't be surprising that these outliers hampers our inference of the relationship between these three variables.
+We see that growth features severe outliers. Unsurprisingly, we see that there are some outliers as well for inflation and GDP. As our sample is small, it wouldn't be surprising that these outliers hampers our inference of the relationship between these three variables.
 
 Nonetheless, we see that other variables distribution do not present outliers, which might produce faster converging estimation.
 
@@ -139,30 +139,29 @@ Nonetheless, we see that other variables distribution do not present outliers, w
 
 In this part we will seek to model the relationship between our variables before estimating whether their relationships are statistically significant. We will consider two different approach.
 
-
-1. **Linear Additive model**: We consider that there is a linear additive relationship between the variables. For instance, we could consider that we have a set of variables that could explain death rates. We can include time  *Fixed-Effects* to assess the effect of time. One might suggest the following model:
+1.  **Linear Additive model**: We consider that there is a linear additive relationship between the variables. For instance, we could consider that we have a set of variables that could explain marriage. One might suggest the following model:
 
 $$
-death_{t} = \alpha_{t} + divorce_{t} + gdp_{t} + inf_{t}+g_{t}+birt_{t} + \varepsilon_{t}
+marriage_{t} = \beta_{1}divorce_{t} + \beta_{2}gdp_{t} +\beta_{3} inf_{t}+\beta_{4}g_{t}+\beta_{5}birth_{t}+ \beta_{6}death_{t} + \varepsilon_{t}
 $$
 
-Modelling the relationship as such relies on the assumption that there is no endogeneity between our variables. There exist tests to verify this assumption.
+Modeling the relationship in this manner relies on the critical assumption that there is no endogeneity between the variables. There are statistical tests available to verify the validity of this assumption.
 
+Furthermore, this approach presumes that the relationship is contemporaneous, which may not be suitable for all models. For example, consider the relationship between mortality and economic growth. These variables may not affect one another simultaneously within the same period.
 
+One could hypothesize that a higher marriage amount may lead to future economic growth, as it strengthens households. Conversely, a negative economic growth shock directly impacts the broader economy, which in turn affects the individuals' ability to plan, causing an immediate decline in the marriage amount.
 
+Thus, we will model marriage as a dependent variable of other macroeconomic variables.
 
+2.  **Vector Auto Regressive models (VAR)**: This method aims to define the endogenous relationship between variables considering that their present and lagged values have an impact on future values.
 
-2.  **Vector Auto Regressive models (VAR)**: This method aims to define the endogenous relationship between variables considering that their present and lag value have an impact on future values.
-
-
-
-Let define our macroeconomic as a the following vector:
+Let define our macroeconomic variable as a the following vector:
 
 $$
 {\textbf Y_{t}} = \begin{bmatrix}
     birth_{t} \\
     death_{t}\\
-    infmortality_{t} \\
+    marriage_{t} \\
     \vdots \\
    inf_{t}
 \end{bmatrix}
@@ -179,12 +178,79 @@ $$
  \eta_{t}
 $$
 
-Where  is the disturbance vector.
-Then, from this model we can model a shock on one of our variables and estimate the shock effect on future values of the other variables. This is the **Impulse Response** which can be plotted and named as the **VAR Impulse Response Function** (**VAR IRF**)
+Where is the disturbance vector. Then, from this model we can model a shock on one of our variables and estimate the shock effect on future values of the other variables. This is the **Impulse Response** which can be plotted and named as the **VAR Impulse Response Function** (**VAR IRF**)
 
+## Linear contemporaneous additive model
 
+Let's model marriage as dependent of others macroeconomic variables as:
 
+$$
+marriage_{t} = \beta_{1}divorce_{t} + \beta_{2}gdp_{t} +\beta_{3} inf_{t}+\beta_{4}g_{t}+\beta_{5}birth_{t}+ \beta_{6}death_{t} + \varepsilon_{t}
+$$ 
 
+We assume that this model satisfies the Gauss-Markov theorem and that we may obtain the BLUE[^2] estimator. The `R` code to estimate this model is
+[^2]: Best Linear Unbiased Estimator. See [here](https://en.wikipedia.org/wiki/Gauss%E2%80%93Markov_theorem).
+
+```{r}
+lm(marriage ~ g + gdp + inf + 
+     divorce + death + birth, data=dbase) %>% summary()
+
+```
+Our results suggest that growth rate does not impact marriage contemporaneously, while mortality rate effect is significant. This model features a high ```Multiple R-squared=0.7486``` which can be interpreted as the predictive accuracy. One could aggregate new data to test the efficiency of this model. Finally, other variables do not seem to affect significantly marriages in Mauritius on the period 1964-2018.
+
+##Vector Auto Regressive model
+
+Now, we will explore the effect of a macroeconomic shock on marriage over time. Recall that our model is :
+$$ 
+{\textbf Y_{t}} = {\textbf A_{1}}{\textbf Y_{t-1}} +
+{\textbf A_{2}}{\textbf Y_{t-2}}+
+{\textbf A_{3}}{\textbf Y_{t-3}}+...
++
+{\textbf A_{p}}{\textbf Y_{t-p}}+
+ \eta_{t}
+$$
+
+### Baseline regression
+
+The code to produce a VAR estimation in `R` is:
+
+```{r}
+var1 <- VAR(dbase[,c("g","inf","divorce","gdp","death","birth","marriage")], p = 4, type = "none",
+          season = NULL, exogen = NULL, lag.max = 5,
+          ic = c("AIC", "HQ", "SC", "FPE"))
+```
+
+This computes an estimation for every ${\textbf A_{p}}$ matrix. Let's look at the estimation for the growth equation.
+
+```{r}
+var1$varresult$g %>%summary()
+```
+We can observe multiple things but the output is not user-friendly. Each variable has five lagged values. The output is quite large and cannot be easily interpreted. We could filter results for interesting estimation, *i.e., the significant estimates*. 
+```{r}
+resu_g <- coef(var1)$g
+colnames(resu_g) <-  c("est","std","tval","pval")
+resu_g_sig <- as.data.frame(resu_g) %>%
+  filter(pval<0.1)
+
+resu_g_sig
+```
+ This displays the variables which have a significant effect on marriage. We can already draw few conclusions here. Firstly, we found previously in our contemporaneous model that death had a negative impact on marriage. This is still observed but only with lagged values of mortality rate. Our prior finding could be explained by the auto regressive property of mortality: past mortality could affect contemporaneous mortality and contemporaneous marriage would be affected by past mortality through the intermediary effect of present mortality. Furthermore, we observe that prior growth reduces the marriage rate. While we hypothesized that growth would induce households to forecast positive economic outcomes, it seems that growth repels marriage. Finally, there are long-term effects of macroeconomic variables on marriage, such as the effect of divorce, birth and death. 
+ 
+
+### Impulse Response Function 
+ 
+ 
+Rather than interpreting the coefficient tables, we can draw results from the VAR model regression to produce the **IRF**. As explained previously, this method simulates a shock on one of our endogenous variable and estimates the effect on other variables. This method is more suitable for interpretation, especially to compare the effect across periods.
+
+```{r}
+irf_est <- irf(var1,response="marriage",ortho=FALSE)
+```
+
+```{r,out.width="65%",fig.align="center"}
+plot(irf_est)
+```
+
+This models shocks of standard deviation. IRF do not lead to conclude that there are long-term effects of a shock of any variable on marriage. Surprisingly, `growth` and `gdp` do not seem to stimulate marriage.
 
 
 
