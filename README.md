@@ -1,3 +1,2 @@
-This repository website is available [here](https://obiwenobi.github.io/rprojet/#introduction){:target="_blank"}.
+This repository website is available [here](https://obiwenobi.github.io/rprojet/#introduction).
 
-<a href="http://example.com/" target="_blank">example</a>
