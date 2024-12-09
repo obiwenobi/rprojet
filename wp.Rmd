@@ -1,9 +1,9 @@
 ---
 output:
+  pdf_document: 
+    number_sections: true
   html_document:
     toc: true
-    number_sections: true
-  pdf_document: 
     number_sections: true
   output: rmarkdown::github_document
 author: "Obiwenobi"
@@ -29,11 +29,11 @@ dbase <- dbase[,-1]
 
 # Introduction
 
-This document aims to define whether macroeconomics variables in Mauritius are endogenous. The dataset used to produce these figures and tables is merge from various sources. It gathers data from 1964 to 2018.
+This document aims to define whether macroeconomic variables in Mauritius are endogenous. The data set used to produce these figures and tables is the intersection of several sources. It gathers data from 1964 to 2018.
 
 # Data summary
 
-The dataset **dbase** includes the following variables:
+The data set **dbase** includes the following variables:
 
 ```{r dbase,echo=FALSE}
 colnames(dbase)
@@ -48,7 +48,7 @@ colnames(dbase)
 -   **marriage**: The number of persons married in a year per 1,000 mid-year population.
 -   **divorce**: The number of persons divorced in a year per 1,000 mid-year population.
 
-How many observations do we have ? The function **nrow()** returns the number of rows and which is in the number of observations in our situation.
+How many observations do we have ? The function **nrow()** returns the number of rows and which, here, is in the number of observations.
 
 ```{r}
 nrow(dbase)
@@ -93,7 +93,7 @@ ggplot() +
                                 "Inflation" = "blue","Growth rate"="black"))
 ```
 
-Plotting together inflation, growth rate and gross domestic product such as the figure above might be misleading because these variables have different scales. Because of larger values, slight changes in smaller values are unobtrusive. Scatter plot, though they have another purpose, is more suitable to investigate data.
+Plotting together inflation, growth rate and gross domestic product such as the figure above might be misleading because these variables have different scales. Because of larger values, slight changes in smaller values are unobtrusive. Scatter plot, though they have another purpose, is more suitable to investigate potential relationships in data.
 
 Finally, let's consider marriage and divorce values.
 
@@ -109,19 +109,19 @@ ggplot() +
                                 "Divorce" = "blue"))
 ```
 
-Recall that these variables are measured on the same scale. Interpreting these values does not require the same caution as for the previous plot. At first glance, there does not seem to be any linear correlation between both variables.
+Recall that these variables are measured on the same scale. Interpreting these values does not require the same caution as the previous plot did. At first glance, there does not seem to be any linear correlation between both variables.
 
-In the previous figure, we did plot inflation which feature a sharp increase around **1980**. At the same period, there is inverse trend to inflation in marriage. Can we infer whether there is a relationship between marriage and divorce ? As discussed previously, the low frequency of data might hamper inference, especially if we seek to investigate long term effect.[^1]
+In the previous figure, we did plot inflation which features a sharp increase around **1980**. At the same period, there is an inverse trend to inflation in marriage. Can we infer whether there is a relationship between marriage and divorce ? As discussed previously, the low frequency of data might hamper inference, especially if we seek to investigate long term effects.[^1]
 
 [^1]: Indeed, if many lags are used, a substantial share of data is to be put aside. For instance, considering 8 lags implies that the first eight observations are not considered in regressions, which almost amounts to 15% of the observations.
 
-Finally, before embarking in the inference journey, let's take a look to the distributions of our variables.
+Finally, before embarking in the inference journey, let's take a look at the distributions of our variables.
 
 ```{r,echo=FALSE}
 boxplot(dbase[,2:10])
 ```
 
-Note that due to different scales, interpreting this boxplot is not straightforward. How about standardizing data before plotting ?
+Note that due to different scales, interpreting this box plot is not straightforward. How about standardizing data before plotting ?
 
 ```{r,out.width="70%"}
 ndata <- dbase%>%
@@ -131,13 +131,13 @@ ndata <- dbase%>%
 ndata
 ```
 
-We see that growth features severe outliers. Unsurprisingly, we see that there are some outliers as well for inflation and GDP. As our sample is small, it wouldn't be surprising that these outliers hampers our inference of the relationship between these three variables.
+We see that growth features severe outliers. Unsurprisingly, we see that there are some outliers as well for inflation and GDP. As our sample is small, it wouldn't be surprising if these outliers hamper our inference on the relationship between these three variables.
 
 Nonetheless, we see that other variables distribution do not present outliers, which might produce faster converging estimation.
 
 # Modelling relationships
 
-In this part we will seek to model the relationship between our variables before estimating whether their relationships are statistically significant. We will consider two different approach.
+In this part we will seek to model the relationship between our variables before estimating whether their relationships are statistically significant. We will consider two different approaches.
 
 1.  **Linear Additive model**: We consider that there is a linear additive relationship between the variables. For instance, we could consider that we have a set of variables that could explain marriage. One might suggest the following model:
 
@@ -155,7 +155,7 @@ Thus, we will model marriage as a dependent variable of other macroeconomic vari
 
 2.  **Vector Auto Regressive models (VAR)**: This method aims to define the endogenous relationship between variables considering that their present and lagged values have an impact on future values.
 
-Let define our macroeconomic variable as a the following vector:
+Let's define our macroeconomic variable as the following vector:
 
 $$
 {\textbf Y_{t}} = \begin{bmatrix}
@@ -178,11 +178,11 @@ $$
  \eta_{t}
 $$
 
-Where is the disturbance vector. Then, from this model we can model a shock on one of our variables and estimate the shock effect on future values of the other variables. This is the **Impulse Response** which can be plotted and named as the **VAR Impulse Response Function** (**VAR IRF**)
+Where $\eta_{t}$ is the disturbance vector. Then, from this model we can model a shock on one of our variables and estimate the shock effect on future values of the other variables. This is the **Impulse Response** which can be plotted and referred to as the **VAR Impulse Response Function** (**VAR IRF**)
 
 ## Linear contemporaneous additive model
 
-Let's model marriage as dependent of others macroeconomic variables as:
+Let's model marriage as dependent of other macroeconomic variables as:
 
 $$
 marriage_{t} = \beta_{1}divorce_{t} + \beta_{2}gdp_{t} +\beta_{3} inf_{t}+\beta_{4}g_{t}+\beta_{5}birth_{t}+ \beta_{6}death_{t} + \varepsilon_{t}
