@@ -12,4 +12,4 @@ The second part of the analysis focuses on modeling relationships between the va
 
 The final part examines the Impulse Response Function (IRF), which simulates the effect of a shock in one variable (e.g., GDP or growth) on marriage. The IRF results suggest that growth and GDP shocks do not significantly affect marriage rates in the long term.
 
-Overall, the analysis suggests that past economic variables influence marriage rates, but there is little evidence of strong, long-term effects from GDP or growth shocks
+Overall, the analysis suggests that past economic variables influence marriage rates, but there is little evidence of strong, long-term effects from GDP or growth shocks.
